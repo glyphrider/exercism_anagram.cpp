@@ -6,6 +6,29 @@
 
 namespace anagram
 {
+	class Word
+	{
+		const std::string _original;
+		std::string _toupper;
+		std::multiset<char> _ordered;
+	public:
+		Word(const std::string &other):_original(other)
+		{
+			for(std::string::const_iterator it = other.begin(); it != other.end(); it++)
+			{
+				_toupper.push_back(toupper(*it));
+				_ordered.insert(toupper(*it));
+			}
+		}
+		const std::string &upper()
+		{
+			return _toupper;
+		}
+		const std::multiset<char> &ordered()
+		{
+			return _ordered;
+		}
+	};
 	Anagram::Anagram(const std::string &word):_word(word) {}
 	Anagram::Anagram(const Anagram &other) { _word = other._word; }
 	Anagram& Anagram::operator=(const Anagram &other) { _word = other._word; return *this; }
@@ -27,27 +50,13 @@ namespace anagram
 	}
 	std::vector<std::string> Anagram::matches(const std::vector<std::string> &word_bank)
 	{
-		std::multiset<std::string::value_type> word; // (_word.begin(),_word.end());
-		std::string word_check;
-		for(std::string::const_iterator word_it = _word.begin(); word_it != _word.end(); word_it++)
-		{
-			word.insert(toupper(*word_it));
-			word_check.push_back(toupper(*word_it));
-		}
 		std::vector<std::string> result;
+		Word word(_word);
 		for(std::vector<std::string>::const_iterator it = word_bank.begin(); it != word_bank.end(); it++)
 		{
-			std::multiset<std::string::value_type> candidate; // (it->begin(),it->end());
-			std::string candidate_check;
-			for(std::string::const_iterator candidate_it = it->begin(); candidate_it != it->end(); candidate_it++)
-			{
-				candidate.insert(toupper(*candidate_it));
-				candidate_check.push_back(toupper(*candidate_it));
-			}
-			if(word_check == candidate_check)
-				continue;
-			if(words_match(word,candidate))
-				result.push_back(*it);
+			Word candidate(*it);
+			if(word.upper() == candidate.upper()) continue;
+			if(words_match(word.ordered(),candidate.ordered())) result.push_back(*it);
 		}
 		return result;
 	}
