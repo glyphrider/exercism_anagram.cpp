@@ -28,14 +28,24 @@ namespace anagram
 	std::vector<std::string> Anagram::matches(const std::vector<std::string> &word_bank)
 	{
 		std::multiset<std::string::value_type> word; // (_word.begin(),_word.end());
+		std::string word_check;
 		for(std::string::const_iterator word_it = _word.begin(); word_it != _word.end(); word_it++)
+		{
 			word.insert(toupper(*word_it));
+			word_check.push_back(toupper(*word_it));
+		}
 		std::vector<std::string> result;
 		for(std::vector<std::string>::const_iterator it = word_bank.begin(); it != word_bank.end(); it++)
 		{
 			std::multiset<std::string::value_type> candidate; // (it->begin(),it->end());
+			std::string candidate_check;
 			for(std::string::const_iterator candidate_it = it->begin(); candidate_it != it->end(); candidate_it++)
+			{
 				candidate.insert(toupper(*candidate_it));
+				candidate_check.push_back(toupper(*candidate_it));
+			}
+			if(word_check == candidate_check)
+				continue;
 			if(words_match(word,candidate))
 				result.push_back(*it);
 		}
