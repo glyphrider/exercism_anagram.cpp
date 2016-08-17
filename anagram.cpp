@@ -1,4 +1,5 @@
-// vim: ts=4:nu
+// vim: ts=4:nu:ar
+//
 #include "anagram.h"
 
 #include <iostream>
@@ -28,6 +29,10 @@ namespace anagram
 		{
 			return _ordered;
 		}
+		const std::string &original()
+		{
+			return _original;
+		}
 	};
 	Anagram::Anagram(const std::string &word):_word(word) {}
 	Anagram::Anagram(const Anagram &other) { _word = other._word; }
@@ -38,14 +43,11 @@ namespace anagram
 		for(it1 = word.begin(), it2 = candidate.begin();
 			(it1 != word.end()) || (it2 != candidate.end()); it1++, it2++)
 		{
-			// std::cout << "comparing " << *it1 << " with " << *it2 << "." << std::endl;
 			if(toupper(*it1) != toupper(*it2))
 			{
-				// std::cout << "failing" << std::endl;
 				return false;
 			}
 		}
-		// std::cout << "passing" << std::endl;
 		return true;
 	}
 	std::vector<std::string> Anagram::matches(const std::vector<std::string> &word_bank)
@@ -56,7 +58,7 @@ namespace anagram
 		{
 			Word candidate(*it);
 			if(word.upper() == candidate.upper()) continue;
-			if(words_match(word.ordered(),candidate.ordered())) result.push_back(*it);
+			if(words_match(word.ordered(),candidate.ordered())) result.push_back(candidate.original());
 		}
 		return result;
 	}
