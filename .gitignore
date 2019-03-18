@@ -1,2 +1,6 @@
-build/
 .*.swp
+CMakeCache.txt
+CMakeFiles/
+Makefile
+anagram
+cmake_install.cmake

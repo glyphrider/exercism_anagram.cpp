@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <set>
+#include <thread>
+#include <chrono>
 
 namespace anagram
 {
@@ -15,10 +17,10 @@ namespace anagram
 	public:
 		Word(const std::string &other):_original(other)
 		{
-			for(std::string::const_iterator it = other.begin(); it != other.end(); it++)
+      for(auto c:other)
 			{
-				_toupper.push_back(toupper(*it));
-				_ordered.insert(toupper(*it));
+				_toupper.push_back(toupper(c));
+				_ordered.insert(toupper(c));
 			}
 		}
 		const std::string &upper()
@@ -54,9 +56,10 @@ namespace anagram
 	{
 		std::vector<std::string> result;
 		Word word(_word);
-		for(std::vector<std::string>::const_iterator it = word_bank.begin(); it != word_bank.end(); it++)
+    for(auto e:word_bank)
 		{
-			Word candidate(*it);
+      // std::this_thread::sleep_for(std::chrono::milliseconds(250));
+			Word candidate(e);
 			if(word.upper() == candidate.upper()) continue;
 			if(words_match(word.ordered(),candidate.ordered())) result.push_back(candidate.original());
 		}
